@@ -20,7 +20,14 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
 from PIL import Image, ImageSequence
 
-DEFAULT_BASE_THEME = "BreezeX-Dark"
+def get_fallback_base_theme():
+    for candidate in ["Bibata-Modern-Classic", "DMZ-White", "Adwaita", "Yaru"]:
+        if (Path("/usr/share/icons") / candidate / "cursors").is_dir():
+            return candidate
+    return "Adwaita"
+
+
+DEFAULT_BASE_THEME = get_fallback_base_theme()
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 PROJECTS_DIR = Path.home() / ".cursor_studio" / "projects"
 PROJECTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -33,28 +40,41 @@ CURSOR_DEFINITIONS = {
         "desc": "Puntero predeterminado de movimiento y selección",
         "icon": "🎯",
         "default_hotspot": "top-left",
-        "aliases": ["left_ptr", "default", "arrow", "top_left_arrow"]
+        "aliases": ["left_ptr", "default", "arrow", "top_left_arrow", "top_left_pointer"]
     },
     "pointer": {
         "label": "Manita / Enlace",
         "desc": "Puntero para enlaces web y botones interactivos",
         "icon": "👆",
         "default_hotspot": "top-left",
-        "aliases": ["pointer", "hand2", "hand1", "pointing_hand"]
+        "aliases": [
+            "pointer", "hand", "hand1", "hand2", "pointing_hand",
+            "link",
+            "e29285e634086352946a0e7090d73106",
+            "9d800788f1b08800ae810202380a0822",
+            "3085a0e285430894940527032f8b26df",
+            "640fb0e74195791501fd1ed57b41487f",
+            "a2a266d0498c3104214a47bd64ab0fc8"
+        ]
     },
     "wait": {
         "label": "Espera / Carga total",
         "desc": "Reloj o spinner cuando la aplicación o el sistema está ocupado",
         "icon": "⏳",
         "default_hotspot": "center",
-        "aliases": ["wait", "watch"]
+        "aliases": ["wait", "watch", "0426c80cadc00023910b0016280800ff"]
     },
     "left_ptr_watch": {
         "label": "En segundo plano",
         "desc": "Flecha con indicador cuando una aplicación se inicia",
         "icon": "⏱️",
         "default_hotspot": "top-left",
-        "aliases": ["left_ptr_watch", "progress", "00000000000000020006000e7e9ffc3f", "08e8e1c95fe2fc01f976f1e063a24ccd", "3ecb610c1bf2410f44200f48c40d3599"]
+        "aliases": [
+            "left_ptr_watch", "progress",
+            "00000000000000020006000e7e9ffc3f",
+            "08e8e1c95fe2fc01f976f1e063a24ccd",
+            "3ecb610c1bf2410f44200f48c40d3599"
+        ]
     },
     "text": {
         "label": "Selección de Texto",
@@ -68,42 +88,67 @@ CURSOR_DEFINITIONS = {
         "desc": "Acción no disponible o destino denegado",
         "icon": "🚫",
         "default_hotspot": "center",
-        "aliases": ["not-allowed", "circle", "dnd-none", "dnd_no_drop", "crossed_circle", "03b6e0fcb3499374a867c041f52298f0"]
+        "aliases": [
+            "not-allowed", "circle", "crossed_circle", "forbidden",
+            "dnd-none", "dnd_no_drop", "03b6e0fcb3499374a867c041f52298f0"
+        ]
     },
     "move": {
         "label": "Mover",
         "desc": "Flechas en cruz para arrastrar ventanas y objetos",
         "icon": "✥",
         "default_hotspot": "center",
-        "aliases": ["move", "all-scroll", "4498f0e0c1937ffe01fd06f973665830", "9081237383d90e509aa00f00170e968f"]
+        "aliases": [
+            "move", "all-scroll", "fleur", "size_all",
+            "4498f0e0c1937ffe01fd06f973665830",
+            "9081237383d90e509aa00f00170e968f"
+        ]
     },
     "crosshair": {
         "label": "Cruz de Precisión",
         "desc": "Para diseño, selección o dibujo exacto",
         "icon": "➕",
         "default_hotspot": "center",
-        "aliases": ["crosshair", "cross"]
+        "aliases": ["crosshair", "cross", "cross_reverse", "diamond_cross", "tcross"]
     },
     "ns-resize": {
         "label": "Redimensión Vertical",
         "desc": "Ajuste de bordes superior e inferior",
         "icon": "↕️",
         "default_hotspot": "center",
-        "aliases": ["ns-resize", "v-double-arrow", "sb_v_double_arrow", "00008160000006810000408080010102", "2870a09082c103050810ffdffffe0204"]
+        "aliases": [
+            "ns-resize", "v-double-arrow", "sb_v_double_arrow",
+            "double_arrow", "v_double_arrow", "row-resize",
+            "size-ver", "size_ver", "split_v",
+            "00008160000006810000408080010102",
+            "2870a09082c103050810ffdffffe0204"
+        ]
     },
     "ew-resize": {
         "label": "Redimensión Horizontal",
         "desc": "Ajuste de bordes laterales",
         "icon": "↔️",
         "default_hotspot": "center",
-        "aliases": ["ew-resize", "h-double-arrow", "sb_h_double_arrow", "028006030e0e7ebffc7f7070c0600140", "14fef782d02440884392942c1120523"]
+        "aliases": [
+            "ew-resize", "h-double-arrow", "sb_h_double_arrow",
+            "h_double_arrow", "col-resize", "size-hor", "size_hor", "split_h",
+            "028006030e0e7ebffc7f7070c0600140",
+            "14fef782d02440884392942c1120523",
+            "14fef782d02440884392942c11205230"
+        ]
     },
     "help": {
         "label": "Ayuda",
         "desc": "Flecha con signo de interrogación",
         "icon": "❓",
         "default_hotspot": "top-left",
-        "aliases": ["help", "question_arrow", "left_ptr_help", "5c6cd98b3f3ebcb01f17a52e0887e1f0", "d9ce0ab6076983704840052347d50678"]
+        "aliases": [
+            "help", "question_arrow", "left_ptr_help", "whats_this",
+            "d9ce0ab605698f320427677b458ad60b",
+            "5c6cd98b3f3ebcb1f9c7f1c204630408",
+            "5c6cd98b3f3ebcb01f17a52e0887e1f0",
+            "d9ce0ab6076983704840052347d50678"
+        ]
     }
 }
 
@@ -125,16 +170,95 @@ def get_current_theme():
         return DEFAULT_BASE_THEME
 
 
-def apply_theme(theme_name):
-    cmds = [
-        ["gsettings", "set", "org.cinnamon.desktop.interface", "cursor-theme", theme_name],
-        ["gsettings", "set", "org.gnome.desktop.interface", "cursor-theme", theme_name],
-    ]
-    for cmd in cmds:
+def apply_theme(theme_name, size=None):
+    current = get_current_theme()
+    fallback = DEFAULT_BASE_THEME if DEFAULT_BASE_THEME != theme_name else ("DMZ-White" if (Path("/usr/share/icons/DMZ-White/cursors")).is_dir() else "Adwaita")
+
+    # 1. Actualizar ~/.icons/default/index.theme para clientes X11 generales
+    try:
+        default_theme_dir = ICONS_DIR / "default"
+        default_theme_dir.mkdir(parents=True, exist_ok=True)
+        (default_theme_dir / "index.theme").write_text(
+            f"[Icon Theme]\nName=Default\nComment=Default Cursor Theme\nInherits={theme_name}\n",
+            encoding="utf-8"
+        )
+    except Exception as e:
+        print(f"Error actualizando ~/.icons/default/index.theme: {e}", file=sys.stderr)
+
+    # 2. Actualizar configuración en GTK-3.0 y GTK-4.0
+    for gtk_ver in ["gtk-3.0", "gtk-4.0"]:
         try:
-            subprocess.run(cmd, check=False)
+            gtk_dir = Path.home() / ".config" / gtk_ver
+            gtk_dir.mkdir(parents=True, exist_ok=True)
+            settings_file = gtk_dir / "settings.ini"
+            lines = []
+            if settings_file.exists():
+                lines = settings_file.read_text(encoding="utf-8").splitlines()
+
+            new_lines = []
+            in_settings = False
+            found_theme = False
+            found_size = False
+            for line in lines:
+                if line.strip() == "[Settings]":
+                    in_settings = True
+                    new_lines.append(line)
+                    continue
+                if in_settings and line.startswith("["):
+                    if not found_theme:
+                        new_lines.append(f"gtk-cursor-theme-name = {theme_name}")
+                        found_theme = True
+                    if size and not found_size:
+                        new_lines.append(f"gtk-cursor-theme-size = {size}")
+                        found_size = True
+                    in_settings = False
+                if in_settings and line.strip().startswith("gtk-cursor-theme-name"):
+                    new_lines.append(f"gtk-cursor-theme-name = {theme_name}")
+                    found_theme = True
+                    continue
+                if in_settings and size and line.strip().startswith("gtk-cursor-theme-size"):
+                    new_lines.append(f"gtk-cursor-theme-size = {size}")
+                    found_size = True
+                    continue
+                new_lines.append(line)
+            if not in_settings and not found_theme:
+                if not lines or "[Settings]" not in lines:
+                    new_lines.append("[Settings]")
+                new_lines.append(f"gtk-cursor-theme-name = {theme_name}")
+                if size and not found_size:
+                    new_lines.append(f"gtk-cursor-theme-size = {size}")
+            settings_file.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+        except Exception as e:
+            print(f"Error actualizando {gtk_ver}/settings.ini: {e}", file=sys.stderr)
+
+    # 3. Actualizar base de datos de recursos X11 (xrdb)
+    try:
+        xrdb_content = f"Xcursor.theme: {theme_name}\n"
+        if size:
+            xrdb_content += f"Xcursor.size: {size}\n"
+        subprocess.run(["xrdb", "-merge"], input=xrdb_content, text=True, check=False)
+    except Exception as e:
+        print(f"Error actualizando xrdb: {e}", file=sys.stderr)
+
+    # 4. Forzar refresco en Cinnamon/GNOME/Muffin mediante toggle si el tema ya estaba activo
+    schemas = ["org.cinnamon.desktop.interface", "org.gnome.desktop.interface"]
+    if current == theme_name:
+        for schema in schemas:
+            try:
+                subprocess.run(["gsettings", "set", schema, "cursor-theme", fallback], check=False)
+            except Exception:
+                pass
+        time.sleep(0.15)
+
+    for schema in schemas:
+        try:
+            subprocess.run(["gsettings", "set", schema, "cursor-theme", theme_name], check=False)
+            if size:
+                subprocess.run(["gsettings", "set", schema, "cursor-size", str(size)], check=False)
         except Exception:
             pass
+
+    # 5. Notificar a la ventana raíz de X11
     try:
         subprocess.run(["xsetroot", "-cursor_name", "left_ptr"], check=False)
     except Exception:
@@ -759,7 +883,8 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
             self.send_json({"error": f"El tema '{theme_name}' no existe en ~/.icons"}, code=404)
             return
 
-        apply_theme(theme_name)
+        size = int(data.get("size", 36)) if "size" in data else None
+        apply_theme(theme_name, size)
         self.send_json({
             "success": True,
             "message": f"Tema '{theme_name}' activado en el sistema.",
@@ -812,7 +937,7 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
         theme_name = data.get("theme_name", "MiCursorCustom").strip()
         theme_name = "".join(c for c in theme_name if c.isalnum() or c in ("-", "_")).strip() or "MiCursorCustom"
         base_theme = data.get("base_theme") or DEFAULT_BASE_THEME
-        if base_theme == theme_name:
+        if base_theme == theme_name or not ((Path("/usr/share/icons") / base_theme).exists() or (ICONS_DIR / base_theme).exists()):
             base_theme = DEFAULT_BASE_THEME
 
         multi_cursors = data.get("cursors")
@@ -917,7 +1042,8 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
             (PROJECTS_DIR / f"{theme_name}.json").write_text(json.dumps(save_payload, indent=2), encoding="utf-8")
             (theme_dir / "cursor_studio_project.json").write_text(json.dumps(save_payload, indent=2), encoding="utf-8")
 
-            apply_theme(theme_name)
+            cursor_size = int(data.get("size", 36))
+            apply_theme(theme_name, cursor_size)
 
             self.send_json({
                 "success": True,

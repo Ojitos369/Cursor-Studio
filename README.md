@@ -52,7 +52,7 @@ Cursor Studio es una aplicación interactiva de escritorio para crear, editar, a
 ### 🛡️ Compilación Limpia e Instalación en Linux
 - **Cero conflictos:** Resuelve automáticamente la duplicación y sobreescritura accidental entre `left_ptr` y `wait`.
 - **Integración con Cinnamon / X11:** Compila con `xcursorgen`, genera los alias de Freedesktop correspondientes, copia a `~/.icons/<tema>/` y activa el tema inmediatamente en Cinnamon mediante `gsettings`.
-- **Restauración en un clic:** Vuelve al tema original del sistema (`BreezeX-Dark`) cuando lo desees.
+- **Restauración en un clic:** Vuelve al tema original base del sistema (`Bibata-Modern-Classic` / `DMZ-White` / `Adwaita`) cuando lo desees.
 
 ### 💎 Modales Modernos con Alto Z-Index
 - Sistema de confirmaciones, prompts y alertas estilo SweetAlert con fondo desenfocado y `z-index: 100000`.

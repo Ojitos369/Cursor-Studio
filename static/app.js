@@ -76,7 +76,7 @@ const CURSOR_DEFINITIONS = {
 // Estado del Proyecto Global (con múltiples cursores)
 const projectState = {
   themeName: 'MiCursorCustom',
-  baseTheme: 'BreezeX-Dark',
+  baseTheme: 'Bibata-Modern-Classic',
   activeCursorType: 'left_ptr',
   cursors: {} // Formato: { [type]: { frames: [{canvas, delay}], hotspot, canvasWidth, canvasHeight, fps, currentFrameIndex } }
 };
@@ -435,10 +435,32 @@ async function fetchSystemStatus() {
     const data = await res.json();
     if (data.current_theme) {
       currentThemeLabel.textContent = data.current_theme;
-      projectState.baseTheme = data.base_theme || 'BreezeX-Dark';
+      projectState.baseTheme = data.base_theme || 'Bibata-Modern-Classic';
+    }
+
+    // Auto-restaurar último proyecto o el proyecto correspondiente al tema del sistema
+    let lastProject = null;
+    try {
+      lastProject = localStorage.getItem('cursor_studio_last_project');
+    } catch (e) {}
+
+    if (!lastProject && data.current_theme && data.current_theme !== data.base_theme) {
+      lastProject = data.current_theme;
+    }
+
+    if (lastProject && lastProject !== 'MiCursorCustom') {
+      try {
+        const pRes = await fetch(`/api/projects/${encodeURIComponent(lastProject)}`);
+        const pData = await pRes.json();
+        if (pData && pData.project && !pData.error) {
+          await loadProjectFromServer(lastProject);
+        }
+      } catch (e) {
+        console.warn("No se pudo cargar el proyecto guardado automáticamente:", e);
+      }
     }
   } catch (err) {
-    currentThemeLabel.textContent = 'BreezeX-Dark';
+    currentThemeLabel.textContent = projectState.baseTheme || 'Bibata-Modern-Classic';
   }
 }
 
@@ -1313,7 +1335,10 @@ async function loadProjectFromServer(name) {
 
     const proj = data.project;
     projectState.themeName = proj.theme_name || name;
-    projectState.baseTheme = proj.base_theme || 'BreezeX-Dark';
+    projectState.baseTheme = proj.base_theme || 'Bibata-Modern-Classic';
+    const themeNameInput = document.getElementById('themeNameInput');
+    if (themeNameInput) themeNameInput.value = projectState.themeName;
+    try { localStorage.setItem('cursor_studio_last_project', projectState.themeName); } catch (e) {}
     projectState.cursors = {};
 
     // Reconstruir los canvas de cada cursor
@@ -1360,6 +1385,7 @@ async function saveCurrentProject(notify = true) {
   commitWorkspaceToActiveCursor();
   const name = document.getElementById('themeNameInput')?.value.trim() || projectState.themeName || 'MiCursorCustom';
   projectState.themeName = name;
+  try { localStorage.setItem('cursor_studio_last_project', name); } catch (e) {}
 
   const payloadCursors = {};
   for (const [ctype, cdata] of Object.entries(projectState.cursors)) {
@@ -2986,6 +3012,8 @@ async function installTheme() {
       setTimeout(() => { statusMsg.textContent = ''; }, 4000);
     }
 
+    try { localStorage.setItem('cursor_studio_last_project', data.theme_name); } catch (e) {}
+
     showModalAlert(
       '¡Instalación Exitosa!',
       `El tema "${data.theme_name}" con ${data.compiled_types?.length || cursorKeys.length} tipos de cursor ha sido compilado e instalado directamente en tu entorno Linux Cinnamon.`,
@@ -2997,9 +3025,10 @@ async function installTheme() {
 }
 
 async function restoreTheme() {
+  const base = projectState.baseTheme || 'Bibata-Modern-Classic';
   const ok = await showModalConfirm(
     'Restaurar Tema del Sistema',
-    '¿Deseas restaurar la configuración de cursores original de Cinnamon / Linux (BreezeX-Dark)?',
+    `¿Deseas restaurar la configuración de cursores original de Cinnamon / Linux (${base})?`,
     { icon: 'warning', confirmText: 'Sí, restaurar', danger: true }
   );
   if (!ok) return;
@@ -3008,7 +3037,8 @@ async function restoreTheme() {
     const res = await fetch('/api/restore', { method: 'POST' });
     const data = await res.json();
     if (data.success) {
-      currentThemeLabel.textContent = 'BreezeX-Dark';
+      currentThemeLabel.textContent = base;
+      try { localStorage.removeItem('cursor_studio_last_project'); } catch (e) {}
       showModalAlert('Tema Restaurado', 'El cursor del sistema ha sido restaurado exitosamente al tema predeterminado.', 'success');
     }
   } catch (err) {
