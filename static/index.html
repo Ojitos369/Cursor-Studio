@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor Studio - Diseñador e Instalador de Cursores</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">✨</span>
+        <span class="logo-text">Cursor<strong>Studio</strong></span>
+      </div>
+      <div class="project-indicator" id="btnOpenProjectsFromBadge" title="Clic para ver o cambiar de proyecto">
+        <span class="proj-icon">📁</span>
+        <span class="proj-label">Proyecto:</span>
+        <strong id="activeProjectBadge">MiCursorCustom</strong>
+        <span class="proj-badge-count" id="activeProjectCount">1 cursor</span>
+      </div>
+      <div class="system-status" id="systemStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Tema activo: <strong id="currentThemeLabel">Cargando...</strong></span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <input type="file" id="fileInput" accept="image/*,.gif,.webp,.svg,.png,.jpg,.jpeg,.bmp" style="display: none;">
+      <input type="file" id="folderInput" webkitdirectory directory multiple style="display: none;">
+      <input type="file" id="libraryFileInput" accept="image/*,.gif,.webp,.svg,.png,.jpg,.jpeg,.bmp" style="display: none;">
+
+      <button class="btn btn-outline" id="btnOpenProjectsModal" title="Ver temas y proyectos guardados">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        📁 Mis Proyectos
+      </button>
+
+      <button class="btn btn-outline" id="btnOpenMediaLibrary" title="Abrir biblioteca de imágenes y animaciones guardadas">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-8-3l2.5 3.01L17.5 12l4.5 6H8l4-5z"/></svg>
+        📚 Biblioteca
+      </button>
+
+      <button class="btn btn-outline" id="btnSaveProjectTop" title="Guardar cambios del proyecto actual">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Guardar
+      </button>
+
+      <button class="btn btn-outline" id="btnImportFile" title="Importar imagen, GIF o SVG al cursor activo">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Importar Imagen / GIF
+      </button>
+
+      <button class="btn btn-outline" id="btnImportFolder" title="Importar carpeta con secuencia de imágenes">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        Secuencia
+      </button>
+
+      <div class="dropdown">
+        <button class="btn btn-outline" id="btnNewCanvas">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM11 7h2v4h4v2h-4v4h-2v-4H7v-2h4z"/></svg>
+          Nuevo Pixel Art ▾
+        </button>
+        <div class="dropdown-menu" id="dropdownSizes">
+          <a href="#" data-size="16">16 × 16 (Mini Pixel)</a>
+          <a href="#" data-size="24">24 × 24 (Clásico)</a>
+          <a href="#" data-size="32" class="active">32 × 32 (Recomendado)</a>
+          <a href="#" data-size="48">48 × 48 (Detallado)</a>
+          <a href="#" data-size="64">64 × 64 (HD)</a>
+        </div>
+      </div>
+
+      <button class="btn btn-outline" id="btnOpenSimulatorTop" title="Abrir simulador interactivo de todos los tipos de cursor">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z"/></svg>
+        🧪 Probar
+      </button>
+
+      <button class="btn btn-danger-outline" id="btnRestore" title="Restaurar el cursor por defecto del sistema">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        Restaurar
+      </button>
+
+      <button class="btn btn-primary" id="btnInstall" title="Compilar y aplicar en Cinnamon">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+        Instalar Tema
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="app-layout">
+    <!-- Panel Izquierdo: Herramientas y Filtros -->
+    <aside class="sidebar-left">
+      <div class="panel-section">
+        <div class="section-title">Herramientas</div>
+        <div class="tool-grid">
+          <button class="tool-btn active" data-tool="pencil" title="Lápiz (P)">✏️ Lápiz</button>
+          <button class="tool-btn" data-tool="eraser" title="Borrador (E)">🧹 Borrador</button>
+          <button class="tool-btn" data-tool="bucket" title="Bote de pintura (B)">🪣 Relleno</button>
+          <button class="tool-btn" data-tool="eyedropper" title="Cuentagotas (I)">💧 Muestrear</button>
+          <button class="tool-btn" data-tool="hotspot" title="Seleccionar Punto de Clic (H)">🎯 Hotspot</button>
+          <button class="tool-btn" data-tool="wand" title="Varita para quitar fondo (W)">🪄 Quita-Fondo</button>
+        </div>
+
+        <div class="tool-suboptions">
+          <div class="option-row">
+            <span>Grosor:</span>
+            <div class="btn-group">
+              <button class="size-btn active" data-brush="1">1</button>
+              <button class="size-btn" data-brush="2">2</button>
+              <button class="size-btn" data-brush="3">3</button>
+            </div>
+          </div>
+          <div class="option-row">
+            <button class="btn btn-sm btn-outline" id="btnUndo" title="Deshacer (Ctrl+Z)">↩️ Deshacer</button>
+            <button class="btn btn-sm btn-outline" id="btnRedo" title="Rehacer (Ctrl+Y)">↪️ Rehacer</button>
+            <button class="btn btn-sm btn-outline" id="btnClearFrame" title="Limpiar fotograma">🗑️ Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paleta de Color -->
+      <div class="panel-section">
+        <div class="section-title">Color</div>
+        <div class="color-picker-wrapper">
+          <input type="color" id="primaryColor" value="#ffffff" class="color-input">
+          <input type="text" id="hexColor" value="#FFFFFF" class="color-hex">
+          <div class="alpha-slider-wrap">
+            <label>Alfa: <span id="alphaVal">100%</span></label>
+            <input type="range" id="alphaSlider" min="0" max="100" value="100">
+          </div>
+        </div>
+        <div class="color-palette" id="colorPalette">
+          <!-- Paleta dinámica -->
+        </div>
+      </div>
+
+      <!-- Eliminación de Fondos -->
+      <div class="panel-section bg-remover-card">
+        <div class="section-title">🪄 Quitar Fondo</div>
+        <p class="section-desc">Selecciona o haz clic con la varita en el color de fondo para volverlo transparente.</p>
+        
+        <div class="option-row">
+          <label>Tolerancia:</label>
+          <div class="slider-with-val">
+            <input type="range" id="bgTolerance" min="0" max="100" value="25">
+            <span id="bgToleranceVal">25%</span>
+          </div>
+        </div>
+
+        <div class="option-row checkbox-row">
+          <label><input type="checkbox" id="bgContiguous" checked> Solo áreas contiguas (bordes)</label>
+        </div>
+
+        <div class="btn-stacked">
+          <button class="btn btn-sm btn-primary-outline" id="btnAutoRemoveBg">✨ Auto-detectar de esquinas</button>
+          <div class="btn-group-row">
+            <button class="btn btn-sm btn-outline" id="btnRemoveBgCurrent">En este cuadro</button>
+            <button class="btn btn-sm btn-outline" id="btnRemoveBgAll">En TODOS los cuadros</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cursores en este Proyecto -->
+      <div class="panel-section project-cursors-card">
+        <div class="section-title-row">
+          <div class="section-title">Cursores del Proyecto</div>
+          <button class="btn btn-xs btn-primary-outline" id="btnSidebarAddCursor" title="Agregar otro tipo de cursor al proyecto">➕ Añadir</button>
+        </div>
+        <p class="section-desc">Selecciona un cursor para editar su imagen, GIF o animación individualmente:</p>
+        <div class="project-cursor-list" id="sidebarCursorList">
+          <!-- Renderizado dinámico de cursores en el proyecto -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Centro: Lienzo de Edición y Línea de Tiempo -->
+    <section class="canvas-workspace">
+      <!-- Barra Superior de Pestañas de Cursores del Proyecto -->
+      <div class="cursor-tabs-bar">
+        <div class="cursor-tabs-header">
+          <span class="tabs-bar-label">CURSORES:</span>
+        </div>
+        <div class="cursor-tabs-list" id="projectCursorTabs">
+          <!-- Pestañas dinámicas de cada tipo de cursor -->
+        </div>
+        <div class="cursor-tabs-add">
+          <button class="btn btn-xs btn-primary-outline" id="btnTabAddCursor" title="Agregar un nuevo tipo de cursor al proyecto (ej. Manita, Espera, Texto...)">
+            ➕ Agregar Tipo
+          </button>
+          <button class="btn btn-xs btn-outline" id="btnTabMediaLibrary" title="Seleccionar imagen o animación de la biblioteca para este cursor">
+            📚 Usar Media
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar superior del lienzo -->
+      <div class="canvas-toolbar">
+        <div class="toolbar-left">
+          <div class="hotspot-info">
+            <span class="hotspot-badge">🎯 Hotspot: <strong id="hotspotCoord">X: 0, Y: 0</strong></span>
+            <div class="hotspot-presets">
+              <button class="btn-chip" data-hs="top-left">Sup-Izq</button>
+              <button class="btn-chip" data-hs="center">Centro</button>
+              <button class="btn-chip" data-hs="top-right">Sup-Der</button>
+              <button class="btn-chip" data-hs="bottom-right">Inf-Der</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <button class="btn-chip" id="toggleGrid" title="Mostrar/ocultar cuadrícula">
+            <span>▦ Rejilla</span>
+          </button>
+          <button class="btn-chip" id="toggleOnion" title="Ver fotograma anterior como fantasma">
+            <span>🧅 Papel Cebolla</span>
+          </button>
+          <div class="zoom-controls">
+            <button class="btn-icon" id="zoomOut" title="Reducir zoom">−</button>
+            <span id="zoomLevel">12x</span>
+            <button class="btn-icon" id="zoomIn" title="Aumentar zoom">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Área del Canvas con scroll/pan -->
+      <div class="canvas-viewport" id="canvasViewport">
+        <div class="canvas-container" id="canvasContainer">
+          <!-- Lienzo fantasma para papel cebolla -->
+          <canvas id="onionCanvas" class="pixel-canvas onion-layer"></canvas>
+          <!-- Lienzo principal de dibujo -->
+          <canvas id="mainCanvas" class="pixel-canvas"></canvas>
+          <!-- Capa de overlay para cursor y retícula de hotspot -->
+          <canvas id="overlayCanvas" class="pixel-canvas overlay-layer"></canvas>
+        </div>
+      </div>
+
+      <!-- Línea de Tiempo (Timeline de fotogramas) -->
+      <div class="timeline-container">
+        <div class="timeline-header">
+          <div class="timeline-title">
+            <span>Línea de Tiempo</span>
+            <span class="badge" id="frameCounter">1 / 1</span>
+          </div>
+          <div class="timeline-actions">
+            <button class="btn btn-xs btn-outline" id="btnAddFrame" title="Añadir fotograma vacío">➕ Nuevo</button>
+            <button class="btn btn-xs btn-outline" id="btnDuplicateFrame" title="Duplicar fotograma actual">📋 Duplicar</button>
+            <button class="btn btn-xs btn-outline" id="btnMoveFrameLeft" title="Mover a la izquierda">◀</button>
+            <button class="btn btn-xs btn-outline" id="btnMoveFrameRight" title="Mover a la derecha">▶</button>
+            <button class="btn btn-xs btn-outline" id="btnSaveFrameToLibrary" title="Guardar esta animación o fotogramas en la biblioteca de medios">💾 Guardar en Biblioteca</button>
+            <button class="btn btn-xs btn-danger-outline" id="btnDeleteFrame" title="Eliminar fotograma">🗑️</button>
+          </div>
+        </div>
+
+        <div class="timeline-strip" id="timelineStrip">
+          <!-- Miniaturas dinámicas -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel Derecho: Vista Previa y Prueba Interactiva -->
+    <aside class="sidebar-right">
+      <!-- Vista Previa Animada -->
+      <div class="panel-section">
+        <div class="section-title">Vista Previa en Vivo</div>
+        <div class="preview-box-wrapper">
+          <div class="preview-box checkerboard" id="previewBox">
+            <canvas id="previewCanvas" width="96" height="96"></canvas>
+          </div>
+          <div class="preview-controls">
+            <button class="btn btn-sm btn-outline" id="btnPlayPause">⏸️ Pausar</button>
+            <div class="btn-group">
+              <button class="btn-preview-bg active" data-bg="checker" title="Fondo transparente">▦</button>
+              <button class="btn-preview-bg" data-bg="dark" title="Fondo oscuro">⬛</button>
+              <button class="btn-preview-bg" data-bg="light" title="Fondo claro">⬜</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Control de velocidad -->
+        <div class="speed-control">
+          <div class="option-row">
+            <span>Velocidad:</span>
+            <strong id="fpsLabel">12 FPS (83ms)</strong>
+          </div>
+          <input type="range" id="speedSlider" min="1" max="40" value="12">
+        </div>
+      </div>
+
+      <!-- Selector de Punto de Clic (Hotspot) Dedicado -->
+      <div class="panel-section hotspot-selector-card">
+        <div class="section-title">🎯 Punto de Clic (Hotspot)</div>
+        <p class="section-desc">Haz clic o arrastra directamente en este recuadro para definir dónde impactará el cursor.</p>
+        <div class="hotspot-box-wrapper">
+          <div class="hotspot-box checkerboard" id="hotspotBox">
+            <canvas id="hotspotCanvas" width="240" height="150"></canvas>
+          </div>
+          <div class="hotspot-control-bar">
+            <span class="hotspot-badge-side">Punto: <strong id="hotspotSideCoord">X: 0, Y: 0</strong></span>
+            <div class="hotspot-quick-chips">
+              <button class="btn-chip" data-hs="top-left" title="Punta superior izquierda (0,0)">↖️ Punta</button>
+              <button class="btn-chip" data-hs="center" title="Centro exacto">⏺️ Centro</button>
+              <button class="btn-chip" data-hs="top-right" title="Superior derecha">↗️ Sup-Der</button>
+              <button class="btn-chip" data-hs="bottom-right" title="Inferior derecha">↘️ Inf-Der</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ajuste de Tamaño Final -->
+      <div class="panel-section">
+        <div class="section-title">Tamaño del Cursor</div>
+        <div class="option-row">
+          <span>Tamaño en pantalla:</span>
+          <strong id="cursorSizeLabel">36 px</strong>
+        </div>
+        <div class="size-chips">
+          <button class="chip-size" data-size="24">24px</button>
+          <button class="chip-size" data-size="32">32px</button>
+          <button class="chip-size active" data-size="36">36px</button>
+          <button class="chip-size" data-size="48">48px</button>
+          <button class="chip-size" data-size="64">64px</button>
+        </div>
+        <input type="range" id="cursorSizeSlider" min="16" max="96" value="36" step="2">
+      </div>
+
+
+      <!-- Configuración y Guardado -->
+      <div class="panel-section install-section">
+        <div class="section-title">Tema y Guardado</div>
+        <label class="input-label">Nombre del Proyecto / Tema:</label>
+        <div class="theme-name-row">
+          <input type="text" id="themeNameInput" class="text-input" value="MiCursorCustom" placeholder="Nombre (sin espacios)">
+          <button class="btn btn-sm btn-outline" id="btnSaveProjectSide" title="Guardar cambios del proyecto">💾 Guardar</button>
+        </div>
+
+        <div class="project-summary-box" id="projectSummaryBox">
+          <div class="summary-line">
+            <span>Cursores en proyecto:</span>
+            <strong id="summaryCursorCount">1</strong>
+          </div>
+          <div class="summary-chips" id="summaryCursorChips">
+            <!-- Chips de cursores incluidos -->
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" id="btnInstallSide">
+          ✨ Instalar Tema Completo en Linux
+        </button>
+
+        <div class="status-msg" id="installStatusMsg"></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal del Simulador Interactivo Multicursores -->
+  <div class="modal-backdrop" id="simulatorModal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">🧪</span>
+          <span>Simulador y Probador de Todos los Tipos de Cursor</span>
+        </div>
+        <button class="modal-close" id="btnCloseSimulator">✕</button>
+      </div>
+
+      <div class="modal-toolbar">
+        <label class="toggle-control">
+          <input type="checkbox" id="toggleLaserAim" checked>
+          <span>🎯 Mostrar punto de mira en tiempo real bajo el ratón</span>
+        </label>
+        <span class="simulator-hint">Haz clic en cualquier recuadro para ver el punto exacto de clic con onda expansiva y coordenadas.</span>
+      </div>
+
+      <div class="modal-body">
+        <div class="cursor-sim-grid">
+          <!-- 1. Flecha Normal -->
+          <div class="sim-card" id="simCardLeftPtr">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="left_ptr" checked>
+                <span>🎯 Flecha (left_ptr)</span>
+              </label>
+              <span class="sim-badge" id="simBadgeLeftPtr">Hotspot: X:0, Y:0</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaLeftPtr">
+              <div class="sim-target-hint">Zona interactiva estándar</div>
+              <button class="btn btn-xs btn-primary">Botón de prueba</button>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+
+          <!-- 2. Manita / Pointer -->
+          <div class="sim-card" id="simCardPointer">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="pointer" checked>
+                <span>👆 Manita (pointer)</span>
+              </label>
+              <span class="sim-badge" id="simBadgePointer">Hotspot: X:0, Y:0</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaPointer">
+              <div class="sim-target-hint">Enlaces y elementos clickables</div>
+              <a href="#" onclick="event.preventDefault();" class="sim-link">👉 Haz clic en este hipervínculo</a>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+
+          <!-- 3. Espera / Reloj -->
+          <div class="sim-card" id="simCardWait">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="wait">
+                <span>⏳ Espera (wait)</span>
+              </label>
+              <span class="sim-badge" id="simBadgeWait">Por defecto</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaWait">
+              <div class="sim-target-hint">Simulación de proceso ocupado</div>
+              <div class="sim-spinner-bar"><div class="sim-spinner-prog"></div></div>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+
+          <!-- 4. Prohibido / Not-Allowed -->
+          <div class="sim-card" id="simCardNotAllowed">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="not-allowed">
+                <span>🚫 Prohibido (not-allowed)</span>
+              </label>
+              <span class="sim-badge" id="simBadgeNotAllowed">Por defecto</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaNotAllowed">
+              <div class="sim-target-hint">Área deshabilitada</div>
+              <button class="btn btn-xs btn-danger-outline" disabled>Elemento bloqueado</button>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+
+          <!-- 5. Mover / Arrastrar -->
+          <div class="sim-card" id="simCardMove">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="move">
+                <span>✥ Mover (move)</span>
+              </label>
+              <span class="sim-badge" id="simBadgeMove">Por defecto</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaMove">
+              <div class="sim-target-hint">Arrastra esta tarjeta</div>
+              <div class="sim-drag-box">📦 Elemento móvil</div>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+
+          <!-- 6. Selección de Texto -->
+          <div class="sim-card" id="simCardText">
+            <div class="sim-card-header">
+              <label class="sim-card-title-check">
+                <input type="checkbox" class="sim-toggle-check" data-cursor-target="text">
+                <span>🔤 Texto (text)</span>
+              </label>
+              <span class="sim-badge" id="simBadgeText">Por defecto</span>
+            </div>
+            <div class="sim-interactive-area" id="simAreaText">
+              <div class="sim-target-hint">Selección y escritura</div>
+              <input type="text" class="sim-input" value="Haz clic y selecciona este texto..." readonly>
+              <div class="sim-click-info">Impacto: esperando clic...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Mis Proyectos y Temas Guardados -->
+  <div class="modal-backdrop" id="projectsModal" style="display: none;">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">📁</span>
+          <span>Mis Proyectos y Temas de Cursores</span>
+        </div>
+        <div class="modal-header-actions">
+          <button class="btn btn-sm btn-primary" id="btnModalNewProject">➕ Nuevo Proyecto</button>
+          <button class="modal-close" id="btnCloseProjectsModal">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-tabs-bar">
+        <div class="filter-pills">
+          <button class="pill-btn active" data-filter="all">Todos (<span id="countAllProjects">0</span>)</button>
+          <button class="pill-btn" data-filter="projects">Proyectos Studio (<span id="countStudioProjects">0</span>)</button>
+          <button class="pill-btn" data-filter="installed">Instalados en Sistema (<span id="countInstalledThemes">0</span>)</button>
+        </div>
+        <div class="modal-search-wrap">
+          <input type="text" id="projectSearchInput" class="search-input" placeholder="Buscar proyecto o tema...">
+        </div>
+      </div>
+
+      <div class="modal-body modal-scroll">
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Renderizado dinámico de tarjetas -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Agregar Tipo de Cursor al Proyecto -->
+  <div class="modal-backdrop" id="addCursorModal" style="display: none;">
+    <div class="modal-dialog modal-md">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">➕</span>
+          <span>Agregar Tipo de Cursor al Proyecto</span>
+        </div>
+        <button class="modal-close" id="btnCloseAddCursorModal">✕</button>
+      </div>
+      <div class="modal-body modal-scroll">
+        <p class="modal-intro">
+          Cada tipo de cursor dentro de tu proyecto tiene su propia imagen estática o animación independiente. Selecciona el que desees añadir:
+        </p>
+        <div class="cursor-types-grid" id="cursorPickerGrid">
+          <!-- Renderizado dinámico de tipos disponibles -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Crear Nuevo Proyecto -->
+  <div class="modal-backdrop" id="newProjectModal" style="display: none;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">✨</span>
+          <span>Crear Nuevo Proyecto</span>
+        </div>
+        <button class="modal-close" id="btnCloseNewProjectModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="input-label">Nombre del Proyecto / Tema:</label>
+          <input type="text" id="newProjectNameInput" class="text-input" placeholder="Ej: MiTemaGatitos">
+          <span class="input-help">Solo letras, números, guiones y guiones bajos.</span>
+        </div>
+        <div class="form-group">
+          <label class="input-label">Empezar con:</label>
+          <div class="choice-group">
+            <label class="choice-label">
+              <input type="radio" name="newProjStart" value="default_arrow" checked>
+              <span>🎯 Flecha básica inicial (Recomendado)</span>
+            </label>
+            <label class="choice-label">
+              <input type="radio" name="newProjStart" value="blank">
+              <span>⬜ Lienzo en blanco (32×32)</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-actions-row">
+          <button class="btn btn-outline" id="btnCancelNewProject">Cancelar</button>
+          <button class="btn btn-primary" id="btnConfirmNewProject">Crear Proyecto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Biblioteca de Medios (Media Library) -->
+  <div class="modal-backdrop" id="mediaLibraryModal" style="display: none;">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">📚</span>
+          <span>Biblioteca de Medios (Imágenes y Animaciones)</span>
+        </div>
+        <div class="modal-header-actions">
+          <button class="btn btn-sm btn-outline" id="btnSaveActiveToLibrary">
+            💾 Guardar Cursor Actual
+          </button>
+          <button class="btn btn-sm btn-primary" id="btnUploadToLibrary">
+            ➕ Subir Archivo
+          </button>
+          <button class="modal-close" id="btnCloseMediaLibraryModal">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-banner-info">
+        <div class="banner-badge">
+          <span>Cursor activo al que se aplicará:</span>
+          <strong id="libTargetCursorBadge">🎯 Flecha Principal (left_ptr)</strong>
+        </div>
+        <span class="banner-subtext">Selecciona cualquier medio guardado para aplicarlo inmediatamente a este cursor, o guárdalo para otros proyectos.</span>
+      </div>
+
+      <div class="modal-tabs-bar">
+        <div class="filter-pills">
+          <button class="pill-btn active" data-media-filter="all">Todos (<span id="libCountAll">0</span>)</button>
+          <button class="pill-btn" data-media-filter="gif">Animaciones / GIFs (<span id="libCountGifs">0</span>)</button>
+          <button class="pill-btn" data-media-filter="image">Imágenes Fijas (<span id="libCountImages">0</span>)</button>
+        </div>
+        <div class="modal-search-wrap">
+          <input type="text" id="mediaSearchInput" class="search-input" placeholder="Buscar por nombre...">
+        </div>
+      </div>
+
+      <div class="modal-body modal-scroll">
+        <div class="media-library-grid" id="mediaLibraryGrid">
+          <!-- Renderizado dinámico de tarjetas de medios -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Swal: Alertas, Confirmaciones y Prompts con Alto Z-Index -->
+  <div class="swal-backdrop" id="customSwalModal" style="display: none;">
+    <div class="swal-dialog">
+      <div class="swal-icon-wrapper warning" id="swalIconWrapper">
+        <div class="swal-icon" id="swalIcon">⚠️</div>
+      </div>
+      <h3 class="swal-title" id="swalTitle">Confirmar Acción</h3>
+      <p class="swal-text" id="swalText">¿Estás seguro de que deseas continuar?</p>
+      <div class="swal-input-wrap" id="swalInputWrap" style="display: none;">
+        <input type="text" class="text-input swal-input" id="swalInput" placeholder="">
+      </div>
+      <div class="swal-actions" id="swalActions">
+        <button class="btn btn-outline swal-btn-cancel" id="swalBtnCancel">Cancelar</button>
+        <button class="btn btn-primary swal-btn-confirm" id="swalBtnConfirm">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
