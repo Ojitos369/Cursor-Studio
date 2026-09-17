@@ -4,8 +4,15 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PORT=52140
 URL="http://127.0.0.1:${PORT}"
 
-# Comprobar si ya está corriendo el servidor
-if ! curl -s --head "${URL}/api/status" > /dev/null 2>&1; then
+# Comprobar si ya está corriendo el servidor y tiene las definiciones actuales
+STATUS="$(curl -s "${URL}/api/status" 2>/dev/null || true)"
+if [ -n "${STATUS}" ] && ! printf '%s' "${STATUS}" | grep -q 'zoom-in'; then
+    OLD_PID="$(pgrep -f "python3 ${DIR}/app.py" || true)"
+    [ -n "${OLD_PID}" ] && kill ${OLD_PID} 2>/dev/null || true
+    STATUS=""
+fi
+
+if [ -z "${STATUS}" ]; then
     echo "Iniciando servidor de Cursor Studio..."
     nohup python3 "${DIR}/app.py" > /tmp/cursor_studio.log 2>&1 &
     
