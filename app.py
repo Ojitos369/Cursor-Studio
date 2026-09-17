@@ -42,6 +42,17 @@ CURSOR_DEFINITIONS = {
         "default_hotspot": "top-left",
         "aliases": ["left_ptr", "default", "arrow", "top_left_arrow", "top_left_pointer"]
     },
+    "alias": {"label": "Alias", "desc": "Cursor alternativo para acciones secundarias", "icon": "↗️", "default_hotspot": "top-left", "aliases": ["alias"]},
+    "all-scroll": {"label": "Desplazamiento total", "desc": "Desplazamiento en cualquier dirección", "icon": "✥", "default_hotspot": "center", "aliases": ["all-scroll"]},
+    "auto": {"label": "Automático", "desc": "El navegador o sistema determina el cursor", "icon": "🖱️", "default_hotspot": "top-left", "aliases": ["auto"]},
+    "cell": {"label": "Celda", "desc": "Selección de celdas en tablas o cuadrículas", "icon": "▦", "default_hotspot": "center", "aliases": ["cell"]},
+    "col-resize": {"label": "Redimensión de columna", "desc": "Ajuste horizontal de columnas", "icon": "↔️", "default_hotspot": "center", "aliases": ["col-resize"]},
+    "context-menu": {"label": "Menú contextual", "desc": "Cursor para abrir un menú contextual", "icon": "☷", "default_hotspot": "top-left", "aliases": ["context-menu"]},
+    "copy": {"label": "Copiar", "desc": "Indica que un elemento puede copiarse", "icon": "📋", "default_hotspot": "top-left", "aliases": ["copy"]},
+    "default": {"label": "Predeterminado", "desc": "Cursor predeterminado del sistema", "icon": "↖️", "default_hotspot": "top-left", "aliases": ["default"]},
+    "e-resize": {"label": "Redimensión Este", "desc": "Ajuste del borde derecho", "icon": "→", "default_hotspot": "center", "aliases": ["e-resize"]},
+    "grab": {"label": "Agarrar", "desc": "Elemento disponible para arrastrar", "icon": "✋", "default_hotspot": "center", "aliases": ["grab"]},
+    "grabbing": {"label": "Agarrando", "desc": "Elemento mientras se arrastra", "icon": "✊", "default_hotspot": "center", "aliases": ["grabbing"]},
     "pointer": {
         "label": "Manita / Enlace",
         "desc": "Puntero para enlaces web y botones interactivos",
@@ -149,7 +160,22 @@ CURSOR_DEFINITIONS = {
             "5c6cd98b3f3ebcb01f17a52e0887e1f0",
             "d9ce0ab6076983704840052347d50678"
         ]
-    }
+    },
+    "n-resize": {"label": "Redimensión Norte", "desc": "Ajuste del borde superior", "icon": "↑", "default_hotspot": "center", "aliases": ["n-resize"]},
+    "ne-resize": {"label": "Redimensión Noreste", "desc": "Ajuste de la esquina superior derecha", "icon": "↗️", "default_hotspot": "center", "aliases": ["ne-resize"]},
+    "nesw-resize": {"label": "Redimensión diagonal NE-SO", "desc": "Ajuste diagonal de esquinas", "icon": "⤢", "default_hotspot": "center", "aliases": ["nesw-resize"]},
+    "nw-resize": {"label": "Redimensión Noroeste", "desc": "Ajuste de la esquina superior izquierda", "icon": "↖️", "default_hotspot": "center", "aliases": ["nw-resize"]},
+    "nwse-resize": {"label": "Redimensión diagonal NO-SE", "desc": "Ajuste diagonal de esquinas", "icon": "⤡", "default_hotspot": "center", "aliases": ["nwse-resize"]},
+    "no-drop": {"label": "No soltar", "desc": "Indica que no se puede soltar aquí", "icon": "🚫", "default_hotspot": "center", "aliases": ["no-drop"]},
+    "none": {"label": "Ninguno", "desc": "Oculta el cursor", "icon": "∅", "default_hotspot": "top-left", "aliases": ["none"]},
+    "progress": {"label": "Progreso", "desc": "Trabajo en curso pero el sistema sigue disponible", "icon": "⏳", "default_hotspot": "top-left", "aliases": ["progress"]},
+    "row-resize": {"label": "Redimensión de fila", "desc": "Ajuste vertical de filas", "icon": "↕️", "default_hotspot": "center", "aliases": ["row-resize"]},
+    "s-resize": {"label": "Redimensión Sur", "desc": "Ajuste del borde inferior", "icon": "↓", "default_hotspot": "center", "aliases": ["s-resize"]},
+    "se-resize": {"label": "Redimensión Sureste", "desc": "Ajuste de la esquina inferior derecha", "icon": "↘️", "default_hotspot": "center", "aliases": ["se-resize"]},
+    "sw-resize": {"label": "Redimensión Suroeste", "desc": "Ajuste de la esquina inferior izquierda", "icon": "↙️", "default_hotspot": "center", "aliases": ["sw-resize"]},
+    "w-resize": {"label": "Redimensión Oeste", "desc": "Ajuste del borde izquierdo", "icon": "←", "default_hotspot": "center", "aliases": ["w-resize"]},
+    "zoom-in": {"label": "Acercar", "desc": "Aumentar el zoom", "icon": "🔍", "default_hotspot": "center", "aliases": ["zoom-in"]},
+    "zoom-out": {"label": "Alejar", "desc": "Reducir el zoom", "icon": "🔎", "default_hotspot": "center", "aliases": ["zoom-out"]}
 }
 
 FILE_TO_CANONICAL = {}
@@ -1080,4 +1106,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

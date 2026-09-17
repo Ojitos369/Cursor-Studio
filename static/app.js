@@ -11,6 +11,17 @@ const CURSOR_DEFINITIONS = {
     icon: '🎯',
     defaultHotspot: { x: 0, y: 0 }
   },
+  alias: { label: 'Alias', desc: 'Cursor alternativo para acciones secundarias', icon: '↗️', defaultHotspot: { x: 0, y: 0 } },
+  'all-scroll': { label: 'Desplazamiento total', desc: 'Desplazamiento en cualquier dirección', icon: '✥', defaultHotspot: { x: 16, y: 16 } },
+  auto: { label: 'Automático', desc: 'El navegador o sistema determina el cursor', icon: '🖱️', defaultHotspot: { x: 0, y: 0 } },
+  cell: { label: 'Celda', desc: 'Selección de celdas en tablas o cuadrículas', icon: '▦', defaultHotspot: { x: 16, y: 16 } },
+  'col-resize': { label: 'Redimensión de columna', desc: 'Ajuste horizontal de columnas', icon: '↔️', defaultHotspot: { x: 16, y: 16 } },
+  'context-menu': { label: 'Menú contextual', desc: 'Cursor para abrir un menú contextual', icon: '☷', defaultHotspot: { x: 0, y: 0 } },
+  copy: { label: 'Copiar', desc: 'Indica que un elemento puede copiarse', icon: '📋', defaultHotspot: { x: 0, y: 0 } },
+  'default': { label: 'Predeterminado', desc: 'Cursor predeterminado del sistema', icon: '↖️', defaultHotspot: { x: 0, y: 0 } },
+  'e-resize': { label: 'Redimensión Este', desc: 'Ajuste del borde derecho', icon: '→', defaultHotspot: { x: 16, y: 16 } },
+  'grab': { label: 'Agarrar', desc: 'Elemento disponible para arrastrar', icon: '✋', defaultHotspot: { x: 16, y: 16 } },
+  'grabbing': { label: 'Agarrando', desc: 'Elemento mientras se arrastra', icon: '✊', defaultHotspot: { x: 16, y: 16 } },
   pointer: {
     label: 'Manita / Enlace',
     desc: 'Puntero para enlaces web y botones interactivos',
@@ -70,7 +81,22 @@ const CURSOR_DEFINITIONS = {
     desc: 'Flecha con signo de interrogación',
     icon: '❓',
     defaultHotspot: { x: 0, y: 0 }
-  }
+  },
+  'n-resize': { label: 'Redimensión Norte', desc: 'Ajuste del borde superior', icon: '↑', defaultHotspot: { x: 16, y: 16 } },
+  'ne-resize': { label: 'Redimensión Noreste', desc: 'Ajuste de la esquina superior derecha', icon: '↗️', defaultHotspot: { x: 16, y: 16 } },
+  'nesw-resize': { label: 'Redimensión diagonal NE-SO', desc: 'Ajuste diagonal de esquinas', icon: '⤢', defaultHotspot: { x: 16, y: 16 } },
+  'nw-resize': { label: 'Redimensión Noroeste', desc: 'Ajuste de la esquina superior izquierda', icon: '↖️', defaultHotspot: { x: 16, y: 16 } },
+  'nwse-resize': { label: 'Redimensión diagonal NO-SE', desc: 'Ajuste diagonal de esquinas', icon: '⤡', defaultHotspot: { x: 16, y: 16 } },
+  'no-drop': { label: 'No soltar', desc: 'Indica que no se puede soltar aquí', icon: '🚫', defaultHotspot: { x: 16, y: 16 } },
+  none: { label: 'Ninguno', desc: 'Oculta el cursor', icon: '∅', defaultHotspot: { x: 0, y: 0 } },
+  progress: { label: 'Progreso', desc: 'Trabajo en curso pero el sistema sigue disponible', icon: '⏳', defaultHotspot: { x: 0, y: 0 } },
+  'row-resize': { label: 'Redimensión de fila', desc: 'Ajuste vertical de filas', icon: '↕️', defaultHotspot: { x: 16, y: 16 } },
+  's-resize': { label: 'Redimensión Sur', desc: 'Ajuste del borde inferior', icon: '↓', defaultHotspot: { x: 16, y: 16 } },
+  'se-resize': { label: 'Redimensión Sureste', desc: 'Ajuste de la esquina inferior derecha', icon: '↘️', defaultHotspot: { x: 16, y: 16 } },
+  'sw-resize': { label: 'Redimensión Suroeste', desc: 'Ajuste de la esquina inferior izquierda', icon: '↙️', defaultHotspot: { x: 16, y: 16 } },
+  'w-resize': { label: 'Redimensión Oeste', desc: 'Ajuste del borde izquierdo', icon: '←', defaultHotspot: { x: 16, y: 16 } },
+  'zoom-in': { label: 'Acercar', desc: 'Aumentar el zoom', icon: '🔍', defaultHotspot: { x: 16, y: 16 } },
+  'zoom-out': { label: 'Alejar', desc: 'Reducir el zoom', icon: '🔎', defaultHotspot: { x: 16, y: 16 } }
 };
 
 // Estado del Proyecto Global (con múltiples cursores)
@@ -3156,4 +3182,3 @@ function showToast(message, type = 'info') {
     setTimeout(() => toast.remove(), 300);
   }, 3500);
 }
-
