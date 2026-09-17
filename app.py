@@ -988,6 +988,18 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
         cursors_dir = theme_dir / "cursors"
         cursors_dir.mkdir(parents=True, exist_ok=True)
 
+        previous_project = theme_dir / "cursor_studio_project.json"
+        if previous_project.exists():
+            try:
+                previous_cursors = json.loads(previous_project.read_text(encoding="utf-8")).get("cursors", {})
+                for old_type in previous_cursors:
+                    for alias in CURSOR_DEFINITIONS.get(old_type, {}).get("aliases", []):
+                        alias_path = cursors_dir / alias
+                        if alias_path.exists() or alias_path.is_symlink():
+                            alias_path.unlink()
+            except (OSError, json.JSONDecodeError):
+                pass
+
         try:
             with tempfile.TemporaryDirectory() as tmpdir:
                 tmp_path = Path(tmpdir)
