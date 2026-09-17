@@ -183,6 +183,12 @@ for canonical, info in CURSOR_DEFINITIONS.items():
     for alias in info["aliases"]:
         FILE_TO_CANONICAL[alias] = canonical
 
+# Nombres que son el alias primario de OTRO tipo seleccionable (ej. "default" es
+# propio de left_ptr, pero también su propio tipo en CURSOR_DEFINITIONS). Un tipo
+# no debe reescribir el archivo primario de otro al compilar sus alias secundarios,
+# o un tipo eliminado "resucita" cuando se reaplica el tipo que comparte ese alias.
+PRIMARY_ALIAS_NAMES = {info["aliases"][0] for info in CURSOR_DEFINITIONS.values()}
+
 
 def get_current_theme():
     try:
@@ -848,9 +854,11 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
             json_path = PROJECTS_DIR / f"{safe_name}.json"
             json_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
-            installed_dir = ICONS_DIR / safe_name
-            if installed_dir.exists() and installed_dir.is_dir():
-                (installed_dir / "cursor_studio_project.json").write_text(json.dumps(data, indent=2), encoding="utf-8")
+            # NOTA: no se sincroniza aquí ICONS_DIR/<tema>/cursor_studio_project.json:
+            # ese archivo es el registro de lo REALMENTE compilado en cursors/ y
+            # handle_install lo usa para saber qué archivos borrar al quitar un tipo.
+            # Sobreescribirlo desde "Guardar" (sin recompilar) deja huérfanos los
+            # cursores eliminados: el siguiente Instalar ya no sabría que existieron.
 
             # Guardar también cursores del proyecto en la biblioteca para que sean reutilizables
             for ctype, cdata in data.get("cursors", {}).items():
@@ -1056,6 +1064,8 @@ class CursorStudioHandler(SimpleHTTPRequestHandler):
                     shutil.copyfile(compiled_file, target_file)
 
                     for alias in aliases[1:]:
+                        if alias in PRIMARY_ALIAS_NAMES and alias != primary_alias:
+                            continue
                         alias_path = cursors_dir / alias
                         if alias_path.exists() or alias_path.is_symlink():
                             alias_path.unlink()

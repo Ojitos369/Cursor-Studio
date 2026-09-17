@@ -4,13 +4,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PORT=52140
 URL="http://127.0.0.1:${PORT}"
 
-# Comprobar si ya está corriendo el servidor y tiene las definiciones actuales
-STATUS="$(curl -s "${URL}/api/status" 2>/dev/null || true)"
-if [ -n "${STATUS}" ] && ! printf '%s' "${STATUS}" | grep -q 'zoom-in'; then
-    OLD_PID="$(pgrep -f "python3 ${DIR}/app.py" || true)"
-    [ -n "${OLD_PID}" ] && kill ${OLD_PID} 2>/dev/null || true
-    STATUS=""
+# Si ya hay un servidor corriendo con código más viejo que app.py, matarlo
+# (comparar mtime de app.py contra el mtime de /proc/PID = hora de arranque del proceso)
+OLD_PID="$(pgrep -f "python3 ${DIR}/app.py" || true)"
+if [ -n "${OLD_PID}" ] && [ "${DIR}/app.py" -nt "/proc/${OLD_PID}" ]; then
+    kill ${OLD_PID} 2>/dev/null || true
+    for i in {1..30}; do
+        kill -0 ${OLD_PID} 2>/dev/null || break
+        sleep 0.1
+    done
 fi
+
+STATUS="$(curl -s "${URL}/api/status" 2>/dev/null || true)"
 
 if [ -z "${STATUS}" ]; then
     echo "Iniciando servidor de Cursor Studio..."
