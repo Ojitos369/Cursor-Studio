@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*__pycache__/
 *.py[cod]
 *$py.class
 
@@ -84,3 +84,5 @@ cursor_studio.log
 
 # Local user cursor studio files (if ever placed in workspace)
 .cursor_studio/
+
+tools/*.log
